@@ -12,12 +12,14 @@ import {
   SynthwaveMessage 
 } from './components';
 
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+
 function MainPage() {
   const [health, setHealth] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/health')
+    axios.get(`${BACKEND_URL}/health`)
       .then(res => setHealth(res.data))
       .catch(err => setError(err.message));
   }, []);
@@ -103,7 +105,7 @@ function RegistrationPage() {
     setIsLoading(true);
     
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/auth/register', {
+      const res = await axios.post(`${BACKEND_URL}/api/v1/auth/register`, {
         email: formData.email,
         password: formData.password,
         full_name: formData.name
@@ -232,7 +234,7 @@ function LoginPage() {
     setIsLoading(true);
     
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/auth/login', {
+      const res = await axios.post(`${BACKEND_URL}/api/v1/auth/login`, {
         email: formData.email,
         password: formData.password
       });
@@ -346,7 +348,7 @@ function DashboardPage() {
     }
 
     // Fetch user data
-    axios.get('http://localhost:8080/api/v1/auth/me', {
+    axios.get(`${BACKEND_URL}/api/v1/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
@@ -367,7 +369,7 @@ function DashboardPage() {
   const handleLogout = async () => {
     const token = localStorage.getItem('access_token');
     try {
-      await axios.post('http://localhost:8080/api/v1/auth/logout', {}, {
+      await axios.post(`${BACKEND_URL}/api/v1/auth/logout`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (err) {
